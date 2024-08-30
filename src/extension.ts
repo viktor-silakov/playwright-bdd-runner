@@ -45,9 +45,12 @@ vscode.commands.registerCommand('gherkin-runner.runTest', (uri: vscode.Uri, line
         return;
     }
 
+    const config = vscode.workspace.getConfiguration('playwright-bdd-runner');
+    const commandArgs = config.get('command-args', '--headed');
+
     const relativePath = path.relative(workspaceFolder.uri.fsPath, uri.fsPath);
     const grepPattern = line.split(':')[1].trim();
-    const command = `npx bddgen && npx playwright test "${relativePath}" --grep "${grepPattern}"`;
+    const command = `npx bddgen && npx playwright test "${relativePath}" --grep "${grepPattern}" ${commandArgs}`;
 
     const terminal = vscode.window.createTerminal('Gherkin Runner');
     terminal.sendText(`cd "${workspaceFolder.uri.fsPath}"`);
